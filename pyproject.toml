@@ -1,0 +1,60 @@
+[project]
+name = "diskcache"
+description = ""
+version = "0.0.0"
+authors = [
+    { name = "Christian Gebbe", email = "" }
+]
+dynamic = ["dependencies"]
+
+[tool.setuptools.dynamic]
+dependencies = {file = ["diskcache/requirements.txt"]}
+
+[tool.ruff]
+select = ["ALL"]
+ignore = [
+    "D", # docstring related
+    "ANN", # type annotation related
+    "TD", # TODO comments
+    "FIX", # TODO comments
+    "PD901", # `df` is a bad variable name.
+    "S301", # `pickle` and modules that wrap it can be unsafe
+]
+
+# Allow autofix for all enabled rules (when `--fix`) is provided.
+fixable = ["ALL"]
+unfixable = []
+
+# Exclude a variety of commonly ignored directories.
+exclude = [
+    "tests/",
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".git-rewrite",
+    ".hg",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".pytype",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "venv",
+]
+per-file-ignores = {}
+
+# Same as Black.
+line-length = 88
+
+# Allow unused variables when underscore-prefixed.
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
