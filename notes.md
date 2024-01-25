@@ -18,9 +18,8 @@
 run uncached request
 
 - `hasher.hash(func) -> Request`
-- `cache.exists(request)` check if request is cached -> no
-  - exists in DB -> no
-- run function -> `item` with `item.request =request` and `item.result=...`
+- `cache.load(request)` -> fails
+- run function -> `result`
 - `cache.save(item)`
   - save result in file `fs.save(request, result)`
   - add DB entry `db.save(request, result)` (request.rel_path)
@@ -29,11 +28,8 @@ run uncached request
 run cached request and evict
 
 - `hash` request
-- `cache.exists()` -> true
-  - exists in DB -> yes
-  - exists in fs -> yes
 - return `cache.load(request)`
-  - `db.load(request)`
+  - `db.load(request)` # to update last used date
   - `fs.load(request)`
 
 eviction (not sure yet WHEN to run)

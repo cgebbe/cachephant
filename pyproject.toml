@@ -1,14 +1,14 @@
 [project]
-name = "diskcache"
+name = "cachephant"
 description = ""
 version = "0.0.0"
 authors = [
-    { name = "Christian Gebbe", email = "" }
+    { name = "Christian Gebbe", email = "foo@bar.baz" }
 ]
 dynamic = ["dependencies"]
 
 [tool.setuptools.dynamic]
-dependencies = {file = ["diskcache/requirements.txt"]}
+# dependencies = {file = ["cachephant/requirements.txt"]}
 
 [tool.ruff]
 select = ["ALL"]
