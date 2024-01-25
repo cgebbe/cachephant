@@ -1,15 +1,15 @@
 import dataclasses
 import abc
-from typing import Callable, Iterable, Any
+from typing import Callable, Iterable, Any, Optional
 import pandas as pd
 
 
 @dataclasses.dataclass
 class Request:
+    hash_str: str
     func_name: str
     arg_str: str
     utc_time: float
-    hash_str: str
 
     def get_relative_path(self) -> str:
         return f"{self.func_name}/{self.hash_str}"
@@ -37,7 +37,7 @@ class FileSystemInterface(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def remove(self, request: Request):
+    def remove(self, request: Request) -> None:
         pass
 
 
@@ -52,9 +52,9 @@ class DatabaseInterface(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def remove(self, request: Request):
+    def remove(self, request: Request) -> None:
         pass
 
     @abc.abstractmethod
-    def get_all_requests(self) -> pd.DataFrame:
+    def get_requests(self, filter_dict: Optional[dict] = None) -> pd.DataFrame:
         pass
