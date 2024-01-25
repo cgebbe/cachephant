@@ -1,6 +1,32 @@
-# disk_cacher
+# Cachephant
 
-This is a small library which can cache function output and thereby avoid unnecessary recomputation. It's not yet completely finished
+![](README.assets/2024-01-25-11-21-22.png)
+![](README.assets/2024-01-25-11-23-53.png)
+
+Cachephant is a small python library which caches function output to disk and thereby avoid unnecessary recomputation. It's aimed for use in Jupyter notebooks.
+
+## Why this library?
+
+There's already [`joblib.Memory`](https://joblib.readthedocs.io/en/latest/auto_examples/memory_basic_usage.html) and [`diskcache.memoize`](https://grantjenks.com/docs/diskcache/api.html#diskcache.FanoutCache.memoize). However, they didn't provide the behavior I desired:
+
+| uses cache if...            | joblib       | diskcache | cachephant |
+| --------------------------- | ------------ | --------- | ---------- |
+| Jupyter kernel restarts     | n            | y         | y          |
+| some unrelated code changes | n            | y         | y          |
+| some called code changes    | n            | y         | y          |
+| function code changes       | n            | y !       | n          |
+| function signature changes  | raises error | y !       | n          |
+
+## How to use
+
+```python
+cache = cachephant.Cache(directory="/path/to/dir")
+
+@cache(...)
+def slow_function():
+    time.sleep(10)
+    return 3
+```
 
 ## How to use
 
@@ -38,3 +64,20 @@ cache/joblib/__main__--tmp-ipykernel-4032011732/get_gdf/func_code.py
 - filelock
 - tinyDB
 - I developed this in code-cells using VSCode
+
+## What's the ideal caching?
+
+- It recalculates if
+  - function code changes ?!
+  - function signature changes (e.g. modified kwargs, MAYBE type annotation?!)
+- It does NOT recalculate if
+  - jupyter kernel restarts
+  - some unrelated code changes (e.g. comments, unrelated classes)
+  - some called code changes (not because not desirable, just because really difficult to find out. Rather empty cache manually then)
+
+Additional features
+
+- ability to evict cache manually (of certain functions?)
+- automatic eviction (LRU)
+- Optional: specify eviction policy
+- Optional: can ignore some arguments (difficult)
