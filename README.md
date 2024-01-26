@@ -9,20 +9,23 @@ Cachephant is a small python library which caches function output to disk and th
 
 There's already [`joblib.Memory`](https://joblib.readthedocs.io/en/latest/auto_examples/memory_basic_usage.html) and [`diskcache.memoize`](https://grantjenks.com/docs/diskcache/api.html#diskcache.FanoutCache.memoize). However, they didn't provide the behavior I desired:
 
-| uses cache if...            | joblib       | diskcache | cachephant |
-| --------------------------- | ------------ | --------- | ---------- |
-| Jupyter kernel restarts     | n            | y         | y          |
-| some unrelated code changes | n            | y         | y          |
-| some called code changes    | n            | y         | y          |
-| function code changes       | n            | y !       | n          |
-| function signature changes  | raises error | y !       | n          |
+| uses cache if...                                      | joblib       | diskcache | cachephant                         |
+| ----------------------------------------------------- | ------------ | --------- | ---------------------------------- |
+| Jupyter kernel restarts                               | n            | y         | y                                  |
+| arguments leading to same "resolved" arguments change | n            | n !       | y                                  |
+| some unrelated code changes                           | n            | y         | y                                  |
+| some related code changes                             | n            | y         | y (n would be ideal but difficult) |
+| function code changes                                 | n            | y !       | n                                  |
+| function signature changes                            | raises error | y !       | n                                  |
 
 ## How to use
 
 ```python
-cache = cachephant.Cache(directory="/path/to/dir")
+import cachephant
 
-@cache(...)
+cache = cachephant.get_default_cache("/path/to/dir")
+
+@cache
 def slow_function():
     time.sleep(10)
     return 3
