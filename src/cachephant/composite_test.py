@@ -5,7 +5,7 @@ import logging
 
 
 def test_cache(tmp_path: Path, caplog: pytest.LogCaptureFixture):
-    mycache = composite.get_default_cacher(tmp_path)
+    mycache = composite.get_default_cache(tmp_path)
 
     @mycache
     def myfunc(x):
