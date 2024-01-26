@@ -1,4 +1,4 @@
-from cachephant.adapter import filesystem
+from cachephant.adapters import filesystem
 from cachephant.interfaces import Request
 from pathlib import Path
 

@@ -4,6 +4,10 @@ from typing import Callable, Iterable, Any, Optional
 import pandas as pd
 
 
+class NoRequestFoundError(ValueError):
+    pass
+
+
 @dataclasses.dataclass
 class Request:
     hash_str: str

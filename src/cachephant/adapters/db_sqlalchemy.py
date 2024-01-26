@@ -1,7 +1,13 @@
-from cachephant.interfaces import DatabaseInterface, Request, Response
+from cachephant.interfaces import (
+    DatabaseInterface,
+    Request,
+    Response,
+    NoRequestFoundError,
+)
 from typing import Optional
 import pandas as pd
 from sqlalchemy.orm import DeclarativeBase, mapped_column, Mapped, Session
+from sqlalchemy.exc import NoResultFound
 import sqlalchemy
 from pathlib import Path
 
@@ -21,9 +27,13 @@ class Database(DatabaseInterface):
 
     def load(self, request: Request) -> None:
         with Session(self.engine) as s:
-            row = s.query(_RequestTable).filter_by(hash_str=request.hash_str).one()
-            row.utc_time = request.utc_time
-            s.commit()
+            try:
+                row = s.query(_RequestTable).filter_by(hash_str=request.hash_str).one()
+            except NoResultFound as err:
+                raise NoRequestFoundError from err
+            else:
+                row.utc_time = request.utc_time
+                s.commit()
 
     def remove(self, request: Request) -> None:
         with Session(self.engine) as s:

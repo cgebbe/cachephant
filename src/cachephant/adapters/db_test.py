@@ -1,4 +1,4 @@
-from cachephant.adapter import db_sqlalchemy
+from cachephant.adapters import db_sqlalchemy
 from pathlib import Path
 from cachephant.interfaces import Request, Response
 import pandas as pd

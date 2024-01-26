@@ -1,4 +1,9 @@
-from cachephant.interfaces import Request, Response, FileSystemInterface
+from cachephant.interfaces import (
+    Request,
+    Response,
+    FileSystemInterface,
+    NoRequestFoundError,
+)
 from typing import Any
 import pickle  # NOTE: Maybe use hickle instead?
 import fsspec.implementations.local
@@ -10,7 +15,7 @@ class FileSystem(FileSystemInterface):
         self.fs: fsspec.AbstractFileSystem = fsspec.filesystem(
             protocol, **storage_options
         )
-        self.prefix = prefix
+        self.prefix = str(prefix)
 
     def save(self, request: Request, result: Any) -> Response:
         path = self._get_absolute_path(request)
@@ -21,9 +26,13 @@ class FileSystem(FileSystemInterface):
 
     def load(self, request: Request) -> Response:
         path = self._get_absolute_path(request)
-        with self.fs.open(path, "rb") as f:
-            result = pickle.load(f)
-        return self.construct_response(request, result)
+        try:
+            with self.fs.open(path, "rb") as f:
+                result = pickle.load(f)
+        except FileNotFoundError as err:
+            raise NoRequestFoundError from err
+        else:
+            return self.construct_response(request, result)
 
     def remove(self, request: Request):
         path = self._get_absolute_path(request)

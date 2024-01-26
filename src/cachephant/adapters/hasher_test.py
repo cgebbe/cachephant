@@ -1,4 +1,4 @@
-from cachephant.adapter import hasher
+from cachephant.adapters import hasher
 from cachephant.interfaces import Request
 
 
