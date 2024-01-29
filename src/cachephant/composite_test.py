@@ -1,7 +1,9 @@
-from cachephant import composite
-from pathlib import Path
-import pytest
 import logging
+from pathlib import Path
+
+import pytest
+
+from cachephant import composite
 
 
 def test_cache(tmp_path: Path, caplog: pytest.LogCaptureFixture):

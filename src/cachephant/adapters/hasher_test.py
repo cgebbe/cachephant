@@ -1,5 +1,5 @@
+# ruff: noqa: ARG001, SLF001
 from cachephant.adapters import hasher
-from cachephant.interfaces import Request
 
 
 def myfunc(x, y, o1="foo", o2=123):
@@ -8,12 +8,12 @@ def myfunc(x, y, o1="foo", o2=123):
 
 def test_hasher():
     myhasher = hasher.Hasher()
-    h1 = myhasher.hash(myfunc, 1, y=33, o2=234)
+    h1 = myhasher.hash_func(myfunc, 1, y=33, o2=234)
     assert h1.func_name == "myfunc"
     assert isinstance(h1.hash_str, str)
 
-    h2 = myhasher.hash(myfunc, 1, y=33)
-    h3 = myhasher.hash(myfunc, 1, y=33, o2=123)
+    h2 = myhasher.hash_func(myfunc, 1, y=33)
+    h3 = myhasher.hash_func(myfunc, 1, y=33, o2=123)
     assert h2.hash_str == h3.hash_str
 
 

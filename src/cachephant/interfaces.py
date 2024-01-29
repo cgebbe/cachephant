@@ -1,7 +1,10 @@
-import dataclasses
 import abc
-from typing import Callable, Iterable, Any, Optional
+import dataclasses
+from collections.abc import Callable
+from typing import Any
+
 import pandas as pd
+from beardataclass import BearDataClass
 
 
 class NoRequestFoundError(ValueError):
@@ -9,7 +12,7 @@ class NoRequestFoundError(ValueError):
 
 
 @dataclasses.dataclass
-class Request:
+class Request(BearDataClass):
     hash_str: str
     func_name: str
     arg_str: str
@@ -21,7 +24,7 @@ class Request:
 
 class HasherInterface(abc.ABC):
     @abc.abstractmethod
-    def hash(self, func: Callable, *args: Any, **kwargs: Any) -> Request:
+    def hash_func(self, func: Callable, *args: Any, **kwargs: Any) -> Request:
         pass
 
 
@@ -60,5 +63,5 @@ class DatabaseInterface(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def get_requests(self, filter_dict: Optional[dict] = None) -> pd.DataFrame:
+    def get_requests(self, filter_dict: dict | None = None) -> pd.DataFrame:
         pass

@@ -1,15 +1,16 @@
+import dataclasses
+import functools
+import logging
+from typing import Any
+
 from cachephant.interfaces import (
-    HasherInterface,
-    FileSystemInterface,
     DatabaseInterface,
+    FileSystemInterface,
+    HasherInterface,
     NoRequestFoundError,
     Request,
     Response,
 )
-import functools
-import dataclasses
-from typing import Any
-import logging
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -23,7 +24,7 @@ class Cache:
     def __call__(self, func):
         @functools.wraps(func)
         def new_func(*args, **kwargs):
-            request = self.hasher.hash(func, *args, **kwargs)
+            request = self.hasher.hash_func(func, *args, **kwargs)
 
             try:
                 response = self._load(request)

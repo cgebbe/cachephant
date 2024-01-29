@@ -1,6 +1,7 @@
+from pathlib import Path
+
 from cachephant.adapters import filesystem
 from cachephant.interfaces import Request
-from pathlib import Path
 
 _REQUEST = Request(
     func_name="myfunc",

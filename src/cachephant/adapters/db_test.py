@@ -1,7 +1,7 @@
-from cachephant.adapters import db_sqlalchemy
 from pathlib import Path
+
+from cachephant.adapters import db_sqlalchemy
 from cachephant.interfaces import Request, Response
-import pandas as pd
 
 _REQUEST = Request(
     func_name="myfunc",

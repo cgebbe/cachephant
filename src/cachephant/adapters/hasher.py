@@ -1,19 +1,22 @@
-from typing import Any, Callable
+import inspect
+import time
+from collections.abc import Callable
+from typing import Any
+
+import deepdiff
+
 from cachephant import interfaces
 from cachephant.interfaces import Request
-import inspect
-import deepdiff
-import time
 
 
 class Hasher(interfaces.HasherInterface):
-    def hash(self, func: Callable[..., Any], *args: Any, **kwargs: Any) -> Request:
+    def hash_func(self, func: Callable[..., Any], *args: Any, **kwargs: Any) -> Request:
         resolved_args = _resolve_args(func, *args, **kwargs)
         hash_str = _hash_obj(
             {
                 "source_code": inspect.getsource(func),
                 "resolved_args": resolved_args,
-            }
+            },
         )
         return Request(
             hash_str=hash_str,
