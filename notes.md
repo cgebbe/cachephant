@@ -1,5 +1,51 @@
 # Notes during implementation
 
+## API new go
+
+- Hasher.hash()
+
+  - if not hash exists...
+    - result = ...
+    - cache.put(hash_data)
+  - cache.load(hash_data)
+
+- during cache.put
+  - cache.evict()
+  - ... ?
+
+## User story
+
+run uncached request
+
+- `hasher.hash(func) -> Request`
+- `cache.load(request)` -> fails
+- run function -> `result`
+- `cache.save(item)`
+  - save result in file `fs.save(request, result)`
+  - add DB entry `db.save(request, result)` (request.rel_path)
+- return `Result`
+
+run cached request and evict
+
+- `hash` request
+- return `cache.load(request)`
+  - `db.load(request)` # to update last used date
+  - `fs.load(request)`
+
+eviction (not sure yet WHEN to run)
+
+- `cache.evict(func_name=..., max_count=...)`
+  - check `db.get_all_requests()`
+  - for request to evict...
+    - `db.remove(request)`
+    - `fs.remove(request)`
+
+when to run eviction?
+
+- before `cache.put` <-- maybe safest for now although not performant?
+- after `cache.put`
+- as background process
+
 ## Alternatives
 
 - https://stackoverflow.com/questions/16463582/memoize-to-disk-python-persistent-memoization
@@ -11,7 +57,6 @@ Metadata
 
 - Cache = Store + Metadata
   - get(hsh)
-    -
     - return Store.get(hsh)
   - put(hsh, item)
     - store.put(..)

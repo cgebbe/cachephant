@@ -1,0 +1,58 @@
+exclude: ".git|.tox"
+fail_fast: false
+repos:
+  ########## CHECK
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: check-added-large-files
+      # PROBLEM: Somehow the end-of-file-fixer fails in the CI while working locally?
+      # See https://github.com/cgebbe/cachephant/actions/runs/7703071671/job/20992727524?pr=1
+      # SOLUTION: Deactivate for now.
+      # - id: end-of-file-fixer
+      - id: mixed-line-ending
+        args: [--fix=lf]
+      - id: detect-aws-credentials
+        args: ["--allow-missing-credentials"]
+      - id: detect-private-key
+
+  - repo: https://github.com/commitizen-tools/commitizen
+    rev: v2.37.0
+    hooks:
+      - id: commitizen-branch
+        # PROBLEM: `--rev-range origin/main..HEAD` fails if run on main
+        # HACKY SOLUTION: pick `--rev-range origin/main~1..HEAD`
+        args: [--rev-range, origin/main~1..HEAD]
+
+  ########## FORMAT
+  - repo: https://github.com/antonbabenko/pre-commit-terraform
+    rev: v1.83.5
+    hooks:
+      - id: terraform_fmt
+
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v3.1.0
+    hooks:
+      - id: prettier
+        # PROBLEM: The changelog is created automatically by commitizen and seems non-prettier-compliat
+        # SOLUTION: exclude formatting the CHANGELOG.
+        exclude: ^CHANGELOG\.md$
+
+  - repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
+    rev: v2.12.0
+    hooks:
+      - id: pretty-format-toml
+        args: [--autofix]
+
+  - repo: https://github.com/psf/black-pre-commit-mirror
+    rev: 23.10.1
+    hooks:
+      - id: black
+
+  ########## LINT
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.1.4
+    hooks:
+      - id: ruff
+        args: [--fix, --exit-non-zero-on-fix]
+        exclude: ^docs/.*cache/
