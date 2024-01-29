@@ -62,7 +62,10 @@ check = [
   "sqlalchemy-stubs"
 ]
 dev = [
-  "ipykernel"
+  "ipython<8",  # Had some problems with prompt_toolkit otherwise...
+  "ipykernel",
+  "pudb",
+  "pytest-pudb"
 ]
 # from https://docs.astral.sh/ruff/configuration/
 lint = [

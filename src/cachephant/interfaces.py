@@ -1,6 +1,6 @@
 import abc
 import dataclasses
-from collections.abc import Callable
+from collections.abc import Callable, Iterable
 from typing import Any
 
 import pandas as pd
@@ -64,4 +64,10 @@ class DatabaseInterface(abc.ABC):
 
     @abc.abstractmethod
     def get_requests(self, filter_dict: dict | None = None) -> pd.DataFrame:
+        pass
+
+
+class EvictorInterface(abc.ABC):
+    @abc.abstractmethod
+    def get_items_to_evict(self, df: pd.DataFrame) -> Iterable[Request]:
         pass

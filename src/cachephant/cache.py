@@ -5,6 +5,7 @@ from typing import Any
 
 from cachephant.interfaces import (
     DatabaseInterface,
+    EvictorInterface,
     FileSystemInterface,
     HasherInterface,
     NoRequestFoundError,
@@ -20,6 +21,7 @@ class Cache:
     hasher: HasherInterface
     fs: FileSystemInterface
     db: DatabaseInterface
+    evictor: EvictorInterface
 
     def __call__(self, func):
         @functools.wraps(func)
@@ -41,6 +43,7 @@ class Cache:
         return new_func
 
     def _save(self, request: Request, result: Any) -> Response:
+        self._evict()
         response = self.fs.save(request, result)
         self.db.save(request, response)
         return response
@@ -50,8 +53,9 @@ class Cache:
         return self.fs.load(request)
 
     def _evict(self):
-        requests = self.db.get_requests()
-        requests_to_evict = requests  # FIXME: A more complicated logic
+        df = self.db.get_requests()
+        requests_to_evict = self.evictor.get_items_to_evict(df)
+        _LOGGER.info(f"Evicting {len(requests_to_evict)} items.")
         for r in requests_to_evict:
             self.db.remove(r)
             self.fs.remove(r)
