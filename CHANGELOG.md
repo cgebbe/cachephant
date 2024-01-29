@@ -1,3 +1,10 @@
+## 0.2.1 (2024-01-29)
+
+
+- Merge pull request #2 from cgebbe/redesign
+- docs: expand README
+- docs: expand README
+
 ## 0.2.0 (2024-01-29)
 
 
